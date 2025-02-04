@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocabulary_app/repository/register_repo.dart';
+import 'package:vocabulary_app/model/register_model.dart';
+import 'package:vocabulary_app/services/register_service.dart';
 
 class RegisterCubit extends Cubit<void> {
   RegisterCubit() : super(());
 
-  var repo = RegisterRepo();
+  var service = RegisterService();
 
-  Future<void> register(String username, String email, String password) async {
-    await repo.register(email, password, username);
+  Future<void> register(RegisterModel registerModel) async {
+    await service.register(registerModel);
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocabulary_app/model/random_model.dart';
-import 'package:vocabulary_app/repository/random_repo.dart';
+import 'package:vocabulary_app/services/random_service.dart';
 
 class RandomCubit extends Cubit<RandomModel> {
-  final RandomRepo _repo;
+  final RandomService _service = RandomService();
   final List<Word> _wordList = []; // Kelimeleri saklamak için bir liste
 
-  RandomCubit(this._repo)
+  RandomCubit()
       : super(RandomModel(
           message: 'Initializing...', // Başlangıç mesajı
           word: Word(
@@ -26,7 +26,7 @@ class RandomCubit extends Cubit<RandomModel> {
 
       // Yeni kelime çek ve listede olup olmadığını kontrol et
       do {
-        newWord = await _repo.fetchRandomWord(); // Yeni kelimeyi çek
+        newWord = await _service.fetchRandomWord(); // Yeni kelimeyi çek
         isWordInList = _isWordInList(newWord); // Kelime listede mi?
       } while (isWordInList); // Kelime listede olduğu sürece yeniden çek
 

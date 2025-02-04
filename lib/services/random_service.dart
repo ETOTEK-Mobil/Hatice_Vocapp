@@ -4,7 +4,7 @@ import 'package:vocabulary_app/model/random_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:vocabulary_app/services/routes/api_routes.dart';
 
-class RandomRepo {
+class RandomService {
   Word parseWord(String response) {
     final decodedJson = jsonDecode(response);
 
@@ -48,8 +48,7 @@ class RandomRepo {
 
         return word;
       } else {
-        throw Exception(
-            'Failed to load random word (Status: ${response.statusCode})');
+        throw Exception('Failed to load random word (Status: ${response.statusCode})');
       }
     } catch (e) {
       print("Error fetching random word: $e");

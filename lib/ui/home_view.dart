@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:vocabulary_app/cubit/login_cubit.dart';
+import 'package:vocabulary_app/cubit/login/login_cubit.dart';
 import 'package:vocabulary_app/cubit/random_cubit.dart';
 import 'package:vocabulary_app/model/random_model.dart';
 import 'package:vocabulary_app/ui/login_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocabulary_app/ui/widgets/wordcard.dart';
+import 'package:vocabulary_app/ui/widgets/word_card.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -46,22 +46,16 @@ class _HomeViewState extends State<HomeView> {
       body: BlocBuilder<RandomCubit, RandomModel?>(
         builder: (context, state) {
           if (state == null) {
-            Future.microtask(
-                () => context.read<RandomCubit>().fetchRandomWord());
+            Future.microtask(() => context.read<RandomCubit>().fetchRandomWord());
             return Center(child: CircularProgressIndicator());
           }
 
           return CardSwiper(
             cardsCount: 1,
             numberOfCardsDisplayed: 1,
-            cardBuilder: (BuildContext context, int index,
-                int horizontalOffsetPercentage, int verticalOffsetPercentage) {
+            cardBuilder:
+                (BuildContext context, int index, int horizontalOffsetPercentage, int verticalOffsetPercentage) {
               final word = state.word;
-              if (word == null) {
-                return Center(
-                    child: Text(
-                        'No word available')); // Eğer kelime yoksa mesaj göster
-              }
               return WordCard(
                 word: word,
                 meaning: word.meaning,

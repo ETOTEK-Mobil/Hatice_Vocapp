@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocabulary_app/cubit/random_cubit.dart';
-import 'package:vocabulary_app/cubit/auth_cubit.dart';
-import 'package:vocabulary_app/cubit/login_cubit.dart';
+import 'package:vocabulary_app/cubit/login/login_cubit.dart';
 import 'package:vocabulary_app/cubit/register_cubit.dart';
-import 'package:vocabulary_app/repository/random_repo.dart';
 import 'package:vocabulary_app/ui/home_view.dart';
 import 'package:vocabulary_app/ui/login_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,13 +22,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final randomRepo = RandomRepo();
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => RegisterCubit()),
-        BlocProvider(create: (context) => RandomCubit(randomRepo)),
-        BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(create: (context) => RandomCubit()),
         BlocProvider(create: (context) => LoginCubit()),
       ],
       child: MaterialApp(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vocabulary_app/cubit/login_cubit.dart';
 import 'package:vocabulary_app/cubit/register_cubit.dart';
+import 'package:vocabulary_app/model/register_model.dart';
 import 'package:vocabulary_app/ui/home_view.dart';
 import 'package:vocabulary_app/ui/utils/validators/auth_validators.dart';
 import 'package:vocabulary_app/ui/widgets/auth_form_fields.dart';
@@ -25,9 +25,11 @@ class _RegisterViewState extends State<RegisterView> {
     if (formKey.currentState!.validate()) {
       try {
         await context.read<RegisterCubit>().register(
-              nameController.text,
-              emailController.text,
-              passwordController.text,
+              RegisterModel(
+                username: nameController.text,
+                email: emailController.text,
+                password: passwordController.text,
+              ),
             );
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
