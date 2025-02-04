@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocabulary_app/services/routes/api_routes.dart';
 
-class LoginRepo {
+class LoginService {
   static Future<void> setToken(String token) async {
     final instance = await SharedPreferences.getInstance();
     instance.setString('token', token);

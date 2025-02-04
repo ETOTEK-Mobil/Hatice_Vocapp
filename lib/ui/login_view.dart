@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vocabulary_app/cubit/login_cubit.dart';
+import 'package:vocabulary_app/cubit/login/login_cubit.dart';
+import 'package:vocabulary_app/cubit/login/login_state.dart';
 import 'package:vocabulary_app/ui/home_view.dart';
 import 'package:vocabulary_app/ui/register_view.dart';
 import 'package:vocabulary_app/ui/utils/validators/auth_validators.dart';
@@ -21,26 +22,10 @@ class _LoginViewState extends State<LoginView> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      try {
-        await context.read<LoginCubit>().login(
-              _emailController.text,
-              _passwordController.text,
-            );
-        if (mounted) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<dynamic>(
-                  builder: (context) => const HomeView()));
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(e.toString()),
-            ),
+      await context.read<LoginCubit>().login(
+            _emailController.text,
+            _passwordController.text,
           );
-        }
-      }
     } else {
       setState(() {
         _autovalidateMode = AutovalidateMode.always;
@@ -54,59 +39,75 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
         title: const Text('Giriş Yap'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          autovalidateMode: _autovalidateMode,
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const SizedBox(height: 64),
-            AuthFormField(
-              controller: _emailController,
-              hintText: 'Email',
-              labelText: 'Email',
-              icon: Icons.email,
-              obscureText: false,
-              validator: AuthValidators.validateEmail,
-              keyboardType: TextInputType.emailAddress,
+      body: BlocConsumer<LoginCubit, LoginState>(listener: (context, state) {
+        if (state.status == LoginStatus.failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage ?? 'Bir hata oluştu'),
             ),
-            const SizedBox(height: 16),
-            AuthFormField(
-              controller: _passwordController,
-              hintText: 'Şifre',
-              labelText: 'Şifre',
-              icon: Icons.lock,
-              obscureText: true,
-              validator: AuthValidators.validatePassword,
-              keyboardType: TextInputType.visiblePassword,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _login,
-              child: const Text(
-                'Giriş Yap',
-                style: TextStyle(fontSize: 16),
+          );
+        }
+        if (state.status == LoginStatus.success) {
+          Navigator.pushReplacement(context, MaterialPageRoute<dynamic>(builder: (context) => const HomeView()));
+        }
+      }, builder: (context, state) {
+        if (state.status == LoginStatus.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            autovalidateMode: _autovalidateMode,
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const SizedBox(height: 64),
+              AuthFormField(
+                controller: _emailController,
+                hintText: 'Email',
+                labelText: 'Email',
+                icon: Icons.email,
+                obscureText: false,
+                validator: AuthValidators.validateEmail,
+                keyboardType: TextInputType.emailAddress,
               ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) {
-                      return const RegisterView();
-                    },
-                  ),
-                );
-              },
-              child: const Text(
-                'Kayıt ol',
-                style: TextStyle(fontSize: 16),
+              const SizedBox(height: 16),
+              AuthFormField(
+                controller: _passwordController,
+                hintText: 'Şifre',
+                labelText: 'Şifre',
+                icon: Icons.lock,
+                obscureText: true,
+                validator: AuthValidators.validatePassword,
+                keyboardType: TextInputType.visiblePassword,
               ),
-            ),
-          ]),
-        ),
-      ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _login,
+                child: const Text(
+                  'Giriş Yap',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute<dynamic>(
+                      builder: (context) {
+                        return const RegisterView();
+                      },
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Kayıt ol',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ]),
+          ),
+        );
+      }),
     );
   }
 }

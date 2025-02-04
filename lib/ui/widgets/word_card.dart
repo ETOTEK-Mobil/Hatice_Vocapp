@@ -20,8 +20,7 @@ class WordCard extends StatelessWidget {
       elevation: 8.0, // Kartın gölgesini ekliyoruz
       margin: const EdgeInsets.all(10.0),
       shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(15.0), // Kart kenarlarını yuvarlatıyoruz
+        borderRadius: BorderRadius.circular(15.0), // Kart kenarlarını yuvarlatıyoruz
       ),
       child: Center(
         child: Column(

@@ -15,8 +15,7 @@ class AuthValidators {
     if (email == null || email.isEmpty) {
       return 'Email alanı boş bırakılamaz';
     }
-    final emailRegExp =
-        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
     if (!emailRegExp.hasMatch(email)) {
       return 'Geçerli bir email adresi giriniz';
